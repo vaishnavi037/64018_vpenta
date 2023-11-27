@@ -1,0 +1,96 @@
+---
+title: "QMM Assigment goal"
+author: "Vaishnavi"
+date: "2023-11-27"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+***
+SUMMARY:
+These findings demonstrate the existence of an optimal solution for the goal programming problem. The decision variable values offer insights into the recommended production levels and deviations from the target for each factor, considering imposed constraints and penalties. This method addresses target deviations and incorporates penalties to maximize profit. The optimal solution to the linear programming problem is 225, indicating that, under the given conditions, we have achieved the best possible outcome according to the goal function.
+
+The slack variables indicate whether constraints are precisely met or have a surplus, while the decision variables reveal the optimal choice in each scenario.
+
+Consider,
+x_1 = Product 1 
+x_2 = Product 2 
+x_3 = Product 3
+We have products (x_1,x_2,x_3) and constraints (Employment level, Earnings next year), so we can't write the constraints in terms of the products.
+**Employment constraint:**
+6x_1+4x_2+5x_3=50
+***Earnings Next Year constraint:***
+8x_1+7x_2+5x_3≥75
+Express P in terms of x_1, x_2 and x_3
+P=20x_1+15x_2+25x_3
+MaxZ=P - 6C - 3D
+
+P represents the total (discounted) profit over the life of the new products P=20x_1+15x_2+25x_3 
+
+C represents change (in either direction) in current employment level y_1=y_1+y_1-
+
+D represents decrease (if any) in earnings for the following year compared to the current year y_2=y_2+y_2-
+
+Management's objective function can be expressed in terms of x_1, x_2, x_3, y_1^+, y_1^-, y_2^+, and y_2^-
+
+MaxZ=20x_1+15x_2+25x_3−6(y_1^-+y_1^+)+0(y_2^-)-3(y_2^+)
+
+***
+***
+Problem:
+The Research and Development Division of the Emax Corporation has developed three new
+products. A decision now needs to be made on which mix of these products should be produced.
+Management wants primary consideration given to three factors: total profit, stability in the
+workforce, and achieving an increase in the company’s earnings next year from the $75 million
+achieved this year. In particular, using the units given in the following table, they want to
+Maximize Z = P - 6C - 3D, where
+P = total (discounted) profit over the life of the new products,
+C = change (in either direction) in the current level of employment,
+D = decrease (if any) in next year’s earnings from the current year’s level.
+The amount of any increase in earnings does not enter into Z, because management is concerned
+primarily with just achieving some increase to keep the stockholders happy. (It has mixed
+feelings about a large increase that then would be difficult to surpass in subsequent years.)
+
+1.Define y1+ and y1-, respectively, as the amount over (if any) and the amount under (if any)
+the employment level goal. Define y2+ and y2- in the same way for the goal regarding
+earnings next year. Define x1, x2, and x3 as the production rates of Products 1, 2, and 3,
+respectively. With these definitions, use the goal programming technique to express y1+,
+y1- , y2+ and y2- algebraically in terms of x1, x2, and x3. Also express P in terms of x1, x2,
+and x3.
+
+2.Express management’s objective function in terms of x1, x2, x3, y1+, y1- , y2+ and y2-.
+
+3.Formulate and solve the linear programming model. What are your findings?
+***
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(lpSolve)
+library(lpSolveAPI)
+emax <- read.lp("C:\\Users\\vaishu\\Downloads\\goal prac.lp")
+print(emax)
+```
+
+```{r}
+emax_t <- matrix(c("Total Profit", "Employment Level", "Earnings Next Year",
+                       20,6,8,
+                       15,4,7,
+                       25,5,5,
+                       "Maximize","=50",">=75",
+                       "Millions of Dollars", "Hundreds of Employees", "Millions of Dollars"), ncol=6, byrow = F)
+colnames(emax_t) <- c("Factor","Product 1", "Product 2", "Product 3", "Goal", "Units")
+as.table(emax_t)
+``` 
+
+```{r}
+solve(emax)
+get.objective(emax)
+get.variables(emax) 
+
+```
+
